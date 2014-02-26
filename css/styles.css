@@ -5,25 +5,59 @@
 }
 
 body {
-	background-color: black;
+  background-color: black;
+  font-family: 'Exo 2', sans-serif;
+
 }
 
 .container {
-	width: 800px;
-	margin: 30px auto;
-	padding: 20px;
-	background-color: white;
+  width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: white;
 }
 
-#show-contact {
-  display: none;
+h1 {
+  text-align:center;
+  font-weight: 700;
+  margin:15px 0;
 }
 
-.contact {
-  cursor: pointer;
-  color: #0088cc;
+h2 {
+  margin:0;
+  padding:0;
 }
 
-.contact:hover {
-  text-decoration: underline;
+#newListContainer, #newTaskContainer {
+  display:none;
+  margin: 20px 0;
+}
+
+#listSelect {
+  margin:10px 0 20px 0;
+  width: 100%;
+}
+
+.completed {
+  color: red;
+  text-decoration: line-through;
+}
+.taskMessageInput {
+  margin:5px 0;
+
+}
+
+#addMoreTasks {
+  cursor:pointer;
+  background-color: black;
+  color:white;
+  width: 150px;
+  margin:10px auto;
+  padding:5px 10px;
+  text-align: center;
+}
+
+.btn {
+  clear:both;
+  margin:20px 0 0 0;
 }

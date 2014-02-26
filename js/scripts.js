@@ -1,61 +1,108 @@
-var Contact = {
-  fullName: function() {
-    return this.firstName + " " + this.lastName;
+var Task = {
+  createList: function() {
+    return this.listName;
   },
-  update: function(newFirst, newLast, newAddress) {
-    this.firstName = newFirst;
-    this.lastName = newLast;
-    this.address = newAddress;
+  addTask: function() {
+    return this.taskMessage;
+  },
+  createListId: function() {
+    return this.listName.replace(/\s+/g, '');
   }
 }
 
+
+
+
 $(document).ready(function() {
 
-  var clickedToEdit;
+  $('#displayLists').on('click','li ul li', function() {
+    
 
-  var showEditForm = function(myObj) {
-    $('#show-contact').show();
-    $('#show-contact h2').show();
-    $('#show-contact h2').text(myObj.fullName());
-    $('.first-name').val(myObj.firstName);
-    $('.last-name').val(myObj.lastName);
-    $('.address').val(myObj.address);
-  }
+    
+    if ($(this).hasClass('completed')) {
+      $(this).prependTo($(this).parent());
+      $(this).removeClass('completed');
+    } else {
+      $(this).appendTo($(this).parent());
+      $(this).addClass('completed');
+    }
+    
 
-  $("form#new-contact").submit(function(event) {
-    event.preventDefault();
+  })
 
-    var inputtedFirstName = $('input#new-first-name').val();
-    var inputtedLastName = $('input#new-last-name').val();
-    var inputtedAddress = $('input#new-address').val();
-    var newContact = Object.create(Contact);
-    newContact.firstName = inputtedFirstName;
-    newContact.lastName = inputtedLastName;
-    newContact.address = inputtedAddress;
 
-    $('ul#contacts').append('<li><span class="contact">' + newContact.fullName() + '</span></li>')
-
-    $('.contact').last().click(function() {
-      showEditForm(newContact);
-      clickedToEdit = $(this);
-    });
-
-    this.reset();
-
-    $(".edit-btn").click(function() {
-
-        var newContact = Object.create(Contact);
-        newContact.firstName =  $('.first-name').val();
-        newContact.lastName = $('.last-name').val();
-        newContact.address = $('.address').val();
-
-        newContact.update($('.first-name').val(), $('.last-name').val(), $('.address').val());
-        
-        clickedToEdit.html(newContact.fullName());
-        clickedToEdit.click(function() {
-          showEditForm(newContact);
-        });
-      });
+  $('#newListBtn').click(function() {
+    $('#newTaskContainer').hide();
+    $('#newListContainer').show();
   });
 
-})
+  $('#newListForm').submit(function(event) {
+    event.preventDefault();
+    var myNewList = $(".listInput").val();
+
+    if (myNewList !== '') {
+      var newList = Object.create(Task);
+      var listArray = [];
+
+      newList.listName = myNewList;
+      listArray.push(newList);
+      
+      $('#newListContainer').hide();
+
+      $('#displayLists').append('<li>' + newList.createList() + '<ul id="' + newList.createListId() + '"></ul></li>');
+      $('#listSelect').append('<option value=' + newList.createListId() + '>' + newList.createListId() + '</option>')
+
+      this.reset();
+    } else {
+      alert('Give your list a name')
+    }
+  })
+
+  
+    $('#newTaskBtn').click(function() {
+      if ($('#displayLists li').length > 0) {
+        $('#newListContainer').hide();
+        $('#newTaskContainer').show();
+      } else {
+        alert('Create a new list first')
+      }
+    });
+
+    $('#addMoreTasks').click(function() {
+      $(this).prev().clone().val('').insertBefore($(this));
+    });
+
+    $("#newTaskForm").submit(function(event) {
+      event.preventDefault();
+      
+      var mySelectVal = $('#listSelect').val();
+      
+      var newTask = Object.create(Task)
+      newTask.taskArray = [];
+
+      $('.taskMessageInput').each(function() {
+        var myNewTask = $(this).val();
+        newTask.taskMessage = myNewTask;
+        newTask.taskArray.push(newTask.addTask());
+      });
+
+      newTask.taskArray.forEach(function(curTask) {
+        $('#' + mySelectVal).append('<li>' + curTask +'</li>');
+      });
+
+      this.reset();
+      $('#newTaskContainer').hide();
+
+      $('.taskMessageInput').each(function(index) {
+        if(index !== 0) {
+          $(this).remove();
+        }
+      });
+
+
+    });
+
+  
+
+});
+
